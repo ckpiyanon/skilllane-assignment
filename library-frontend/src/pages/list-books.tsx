@@ -48,6 +48,8 @@ export const ListBooksPage: React.FC = () => {
         </tbody>
       </table>
       <p />
+      <a href='/add-book'>Add Book</a>
+      <p />
       <Footer />
     </>
   );

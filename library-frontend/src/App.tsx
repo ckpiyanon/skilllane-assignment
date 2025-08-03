@@ -1,3 +1,5 @@
+import { AddBookPage } from './pages/add-book';
+import { BookPage } from './pages/book';
 import { ListBooksPage } from './pages/list-books';
 import { LoginPage } from './pages/login';
 import { LogoutPage } from './pages/logout';
@@ -12,6 +14,8 @@ function App() {
         <Route path='/logout' element={<LogoutPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/books' element={<ListBooksPage />} />
+        <Route path='/add-book' element={<AddBookPage />} />
+        <Route path='/books/:bookId' element={<BookPage />} />
 
         <Route path='/' element={<Navigate replace to='/login' />} />
       </Routes>

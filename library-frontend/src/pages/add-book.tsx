@@ -1,53 +1,51 @@
-import { Footer } from '../components/footer.component';
 import { bookService } from '../services/book.service';
-import type { BookResponse } from '../types/book.response';
 import { useForm } from '@tanstack/react-form';
 import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useState } from 'react';
 
-export const BookPage: React.FC = () => {
-  const { bookId } = useParams();
-  const [book, setBook] = useState<BookResponse>();
-  useEffect(() => {
-    const fn = async () => {
-      const res = await bookService.getBook(parseInt(bookId!));
-      setBook(res);
-    };
-    fn();
-  }, [bookId]);
+const toBase64 = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result!.toString().split(',')[1]);
+    reader.onerror = reject;
+  });
+
+export const AddBookPage: React.FC = () => {
+  const [file, setFile] = useState<File>();
 
   const { handleSubmit, Field } = useForm({
     defaultValues: {
-      title: book?.title,
-      author: book?.author,
-      isbn: book?.isbn,
-      publicationYear: book?.publicationYear.toString(),
-      quantity: book?.quantity.toString(),
+      title: '',
+      author: '',
+      isbn: '',
+      publicationYear: '',
+      quantity: '',
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       bookService
-        .updateBook(book!.id, {
-          title: value.title!,
-          author: value.author!,
-          isbn: value.isbn!,
-          publicationYear: parseInt(value.publicationYear!),
-          quantity: parseInt(value.quantity!),
+        .createBook({
+          title: value.title,
+          author: value.author,
+          isbn: value.isbn,
+          publicationYear: parseInt(value.publicationYear),
+          quantity: parseInt(value.quantity),
+          coverImage: await toBase64(file!),
+          coverImageFileType: file!.name.split('.')[1],
         })
         .then(() => {
-          alert('update book');
+          window.alert('Book added successfully');
           window.location.href = '/books';
+        })
+        .catch(() => {
+          window.alert('Cannot add book');
         });
     },
   });
 
-  if (!book) {
-    return <></>;
-  }
-
   return (
-    <>
-      <img src={book.coverImage} />
+    <div>
+      <h1>Add a book</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -83,10 +81,10 @@ export const BookPage: React.FC = () => {
           )}
         </Field>
         <p />
-        <Field name='isbn'>
+        <Field name='publicationYear'>
           {(field) => (
             <>
-              <label htmlFor={field.name}>ISBN: </label>
+              <label htmlFor={field.name}>Publication Year: </label>
               <input
                 id={field.name}
                 name={field.name}
@@ -97,10 +95,10 @@ export const BookPage: React.FC = () => {
           )}
         </Field>
         <p />
-        <Field name='publicationYear'>
+        <Field name='isbn'>
           {(field) => (
             <>
-              <label htmlFor={field.name}>Pubication year: </label>
+              <label htmlFor={field.name}>ISBN: </label>
               <input
                 id={field.name}
                 name={field.name}
@@ -125,41 +123,10 @@ export const BookPage: React.FC = () => {
           )}
         </Field>
         <p />
-        <button type='submit'>Update</button>
-        <button
-          type='button'
-          onClick={() => {
-            bookService
-              .borrowBook(book!.id)
-              .then(() => {
-                alert('borrowed book');
-                window.location.href = '/books';
-              })
-              .catch(() => {
-                alert('cannot borrow book');
-              });
-          }}
-        >
-          Borrow
-        </button>
-        <button
-          type='button'
-          onClick={() => {
-            bookService
-              .returnBook(book!.id)
-              .then(() => {
-                alert('returned book');
-                window.location.href = '/books';
-              })
-              .catch(() => {
-                alert('cannot return book');
-              });
-          }}
-        >
-          Return
-        </button>
+        <input type='file' onChange={(e) => setFile(e.target!.files![0])} />
+        <p />
+        <button type='submit'>Add Book</button>
       </form>
-      <Footer />
-    </>
+    </div>
   );
 };

@@ -1,5 +1,6 @@
 import type { BookResponse } from '../types/book.response';
 import type { CreateBookRequest } from '../types/create-book.request';
+import type { UpdateBookRequest } from '../types/update-book.request';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -24,8 +25,35 @@ const createBook = async (bookDetails: CreateBookRequest) => {
   return data;
 };
 
+const updateBook = async (bookId: number, bookDetails: UpdateBookRequest) => {
+  const { data } = await client.patch<BookResponse>(
+    `/books/${bookId}`,
+    bookDetails,
+  );
+  return data;
+};
+
+const borrowBook = async (bookId: number) => {
+  const { data } = await client.post<BookResponse>(
+    `/books/${bookId}/borrow`,
+    {},
+  );
+  return data;
+};
+
+const returnBook = async (bookId: number) => {
+  const { data } = await client.post<BookResponse>(
+    `/books/${bookId}/return`,
+    {},
+  );
+  return data;
+};
+
 export const bookService = {
   listBooks,
   getBook,
   createBook,
+  updateBook,
+  borrowBook,
+  returnBook,
 };

@@ -11,6 +11,7 @@ export const LoginPage: React.FC = () => {
       await authService
         .login(value.username, value.password)
         .then(() => {
+          window.alert('login successful');
           window.location.href = '/books';
         })
         .catch(() => window.alert('Wrong username or password'));
@@ -35,7 +36,6 @@ export const LoginPage: React.FC = () => {
                 id={field.name}
                 name={field.name}
                 value={field.state.value}
-                onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
             </>

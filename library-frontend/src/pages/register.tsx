@@ -8,7 +8,10 @@ export const RegisterPage: React.FC = () => {
     onSubmit: async ({ value }) => {
       await authService
         .register(value.username, value.password)
-        .then(() => (window.location.href = '/login'))
+        .then(() => {
+          window.alert('Registered successfully');
+          window.location.href = '/login';
+        })
         .catch(() => window.alert('Cannot register'));
     },
   });
