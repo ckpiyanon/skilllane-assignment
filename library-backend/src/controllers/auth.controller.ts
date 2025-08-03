@@ -1,11 +1,14 @@
 import { Atk } from '../decorators/atk.decorator';
 import { Public } from '../decorators/is-public.decorator';
+import { UserId } from '../decorators/user-id.decorator';
 import type { LoginRequest } from '../dtos/requests/login.request';
 import type { RegisterRequest } from '../dtos/requests/register.request';
+import { UserMapper } from '../mapper/user.mapper';
 import { AuthService } from '../services/auth.service';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -15,7 +18,10 @@ import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userMapper: UserMapper,
+  ) {}
 
   @Public()
   @Post('register')
@@ -45,5 +51,12 @@ export class AuthController {
     await this.authService.logout(token);
     response.clearCookie('atk');
     return 'Success';
+  }
+
+  @Get('user')
+  async getUserInfo(@UserId() userId: number) {
+    return this.authService
+      .getUserInfo(userId)
+      .then((user) => this.userMapper.toUserResponse(user));
   }
 }

@@ -5,6 +5,7 @@ import { Book } from './entities/book.entity';
 import { User } from './entities/user.entity';
 import { AuthGuard } from './guards/auth.guard';
 import { BookMapper } from './mapper/book.mapper';
+import { UserMapper } from './mapper/user.mapper';
 import { AuthService } from './services/auth.service';
 import { BookService } from './services/book.service';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -39,6 +40,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     AuthService,
     BookService,
     BookMapper,
+    UserMapper,
     { provide: APP_GUARD, useClass: AuthGuard },
   ],
 })

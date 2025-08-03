@@ -7,6 +7,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
@@ -54,6 +56,7 @@ export class BookController {
       );
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post(':bookId/borrow')
   async borrowBook(
     @Param('bookId', ParseIntPipe) bookId: number,
@@ -64,6 +67,7 @@ export class BookController {
       .then((book) => this.bookMapper.toBookResponse(book));
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post(':bookId/return')
   async returnBook(
     @Param('bookId', ParseIntPipe) bookId: number,

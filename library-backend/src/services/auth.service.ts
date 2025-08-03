@@ -1,6 +1,11 @@
 import { User } from '../entities/user.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import type { Cache } from 'cache-manager';
@@ -44,5 +49,13 @@ export class AuthService {
 
   async getUserId(token: string) {
     return this.cacheManager.get<number>(`atk:${token}`);
+  }
+
+  async getUserInfo(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`user with id ${userId} not found`);
+    }
+    return user;
   }
 }
