@@ -1,3 +1,4 @@
+import { CreateBookRequest } from '../dtos/requests/create-book.request';
 import { Book } from '../entities/book.entity';
 import { User } from '../entities/user.entity';
 import {
@@ -6,6 +7,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { writeFileSync } from 'fs';
+import { nanoid } from 'nanoid';
+import path from 'path';
 import { ILike, Repository } from 'typeorm';
 
 @Injectable()
@@ -23,8 +27,19 @@ export class BookService {
     return book;
   }
 
-  async createBook(bookDetails: Partial<Book>): Promise<Book> {
-    return this.bookRepository.save(this.bookRepository.create(bookDetails));
+  async createBook(bookDetails: CreateBookRequest): Promise<Book> {
+    const coverBase64 = bookDetails.coverImage;
+    const fileName = `${nanoid()}.${bookDetails.coverImageFileType}`;
+    writeFileSync(
+      path.join('book-covers', fileName),
+      Buffer.from(coverBase64, 'base64'),
+    );
+    return this.bookRepository.save(
+      this.bookRepository.create({
+        ...bookDetails,
+        coverImageFileName: fileName,
+      }),
+    );
   }
 
   async updateBook(bookId: number, bookDetails: Partial<Book>): Promise<Book> {

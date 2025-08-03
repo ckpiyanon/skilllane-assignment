@@ -1,12 +1,15 @@
 import { Book } from '../entities/book.entity';
 import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
+import path from 'path';
 import { BookResponse } from 'src/dtos/responses/book.response';
 
 @Injectable()
 export class BookMapper {
   private getFileBase64Content(fileName: string): string {
-    const base64 = readFileSync('book-covers/fileName', { encoding: 'base64' });
+    const base64 = readFileSync(path.join('book-covers', fileName), {
+      encoding: 'base64',
+    });
     return `data:image/${fileName.split('.')[1]};base64,${base64}`;
   }
 

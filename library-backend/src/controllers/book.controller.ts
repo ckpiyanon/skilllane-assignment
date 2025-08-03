@@ -1,3 +1,4 @@
+import { UserId } from '../decorators/user-id.decorator';
 import type { CreateBookRequest } from '../dtos/requests/create-book.request';
 import type { UpdateBookRequest } from '../dtos/requests/update-book.request';
 import { BookMapper } from '../mapper/book.mapper';
@@ -27,16 +28,16 @@ export class BookController {
       .then((book) => this.bookMapper.toBookResponse(book));
   }
 
-  @Get('/:bookId')
-  async getBook(@Param(ParseIntPipe) bookId: number) {
+  @Get(':bookId')
+  async getBook(@Param('bookId', ParseIntPipe) bookId: number) {
     return this.bookService
       .getBook(bookId)
       .then((book) => this.bookMapper.toBookResponse(book));
   }
 
-  @Patch('/:bookId')
+  @Patch(':bookId')
   async updateBook(
-    @Param(ParseIntPipe) bookId: number,
+    @Param('bookId', ParseIntPipe) bookId: number,
     @Body() bookDetails: UpdateBookRequest,
   ) {
     return this.bookService
@@ -45,7 +46,7 @@ export class BookController {
   }
 
   @Get()
-  async listBooks(@Query() keyword?: string) {
+  async listBooks(@Query('keyword') keyword?: string) {
     return this.bookService
       .findBook(keyword)
       .then((books) =>
@@ -53,15 +54,21 @@ export class BookController {
       );
   }
 
-  @Post('/:bookId/borrow')
-  async borrowBook(@Param(ParseIntPipe) bookId: number, userId: number) {
+  @Post(':bookId/borrow')
+  async borrowBook(
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @UserId() userId: number,
+  ) {
     return this.bookService
       .borrowBook(bookId, userId)
       .then((book) => this.bookMapper.toBookResponse(book));
   }
 
-  @Post('/:bookId/return')
-  async returnBook(@Param(ParseIntPipe) bookId: number, userId: number) {
+  @Post(':bookId/return')
+  async returnBook(
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @UserId() userId: number,
+  ) {
     return this.bookService
       .returnBook(bookId, userId)
       .then((book) => this.bookMapper.toBookResponse(book));

@@ -4,6 +4,4 @@ export type UpdateBookRequest = {
   isbn: string;
   publicationYear: number;
   quantity: number;
-  coverImage: string; // base64 string
-  coverImageFileType: string;
 };
