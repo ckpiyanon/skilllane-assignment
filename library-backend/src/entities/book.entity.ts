@@ -24,10 +24,10 @@ export class Book {
   @Column({ type: 'int' })
   quantity: number;
 
-  @Column({ type: 'timestamptz', default: new Date() })
+  @Column({ type: 'timestamptz', default: () => 'NOW()' })
   createdAt: Date;
 
-  @Column({ type: 'timestamptz', default: new Date() })
+  @Column({ type: 'timestamptz', default: () => 'NOW()' })
   updatedAt: Date;
 
   @Column({ type: 'timestamptz', nullable: true })

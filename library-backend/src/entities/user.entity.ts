@@ -12,10 +12,10 @@ export class User {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ type: 'timestamptz', default: new Date() })
+  @Column({ type: 'timestamptz', default: () => 'NOW()' })
   createdAt: Date;
 
-  @Column({ type: 'timestamptz', default: new Date() })
+  @Column({ type: 'timestamptz', default: () => 'NOW()' })
   updatedAt: Date;
 
   @Column({ type: 'timestamptz', nullable: true })
