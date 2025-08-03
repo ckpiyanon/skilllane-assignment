@@ -17,14 +17,24 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/typeorm.config.ts src/migrations/migration",
+    "db:migration:create": "typeorm-ts-node-commonjs migration:create ./src/migrations/migration",
+    "db:migration:up": "typeorm-ts-node-commonjs migration:run -d src/typeorm.config.ts",
+    "db:migration:down": "typeorm-ts-node-commonjs migration:revert -d src/typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/typeorm": "^11.0.0",
+    "dotenv": "^17.2.1",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.25",
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -32,6 +42,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",

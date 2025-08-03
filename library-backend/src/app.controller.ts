@@ -1,12 +1,21 @@
+import { Book } from './entities/book.entity';
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    @InjectRepository(Book) private readonly bookRepository: Repository<Book>,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('health-check')
+  getHealthCheck() {
+    return { status: 'OK' };
+  }
+
+  @Get('test')
+  getTest() {
+    return this.bookRepository.find();
   }
 }
